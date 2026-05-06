@@ -60,8 +60,12 @@ const projects: Project[] = [
     title: "Money Tracker App",
     category: ["Mobile"],
     year: "2025",
-    description: "Mobile application for tracking personal finances with an intuitive interface.",
-    highlights: ["Built with Flutter for cross-platform support", "Intuitive user interface for tracking expenses"],
+    description:
+      "Mobile application for tracking personal finances with an intuitive interface.",
+    highlights: [
+      "Built with Flutter for cross-platform support",
+      "Intuitive user interface for tracking expenses",
+    ],
     tech: ["Flutter", "Dart", "Hive Flutter"],
     github: "#",
   },
@@ -70,8 +74,12 @@ const projects: Project[] = [
     title: "Sistem Aplikasi Berbasis Web Laundry",
     category: ["Web", "Full-Stack"],
     year: "2024",
-    description: "A comprehensive laundry management system built with CodeIgniter.",
-    highlights: ["Order tracking and management", "Reporting and analytics for laundry business"],
+    description:
+      "A comprehensive laundry management system built with CodeIgniter.",
+    highlights: [
+      "Order tracking and management",
+      "Reporting and analytics for laundry business",
+    ],
     tech: ["CodeIgniter", "PHP", "MySQL", "Bootstrap", "SB Admin 2"],
     github: "#",
   },
@@ -80,8 +88,12 @@ const projects: Project[] = [
     title: "Nota Dinas KOMINFOTIK Jakarta Selatan",
     category: ["Web", "Full-Stack"],
     year: "2024",
-    description: "Web-based official memo application for KOMINFOTIK Jakarta Selatan.",
-    highlights: ["Streamlined official communications", "Digital memo tracking and archiving"],
+    description:
+      "Web-based official memo application for KOMINFOTIK Jakarta Selatan.",
+    highlights: [
+      "Streamlined official communications",
+      "Digital memo tracking and archiving",
+    ],
     tech: ["CodeIgniter", "PHP", "MySQL"],
     github: "#",
   },
@@ -90,9 +102,23 @@ const projects: Project[] = [
     title: "Company Profile CMS PT.Mitra Graha Integrasi",
     category: ["Backend", "Web", "API"],
     year: "2025",
-    description: "Content Management System for company profile built with NestJS.",
-    highlights: ["Custom CMS features", "Built with modern Node.js framework (NestJS)"],
-    tech: ["NestJS", "TypeScript", "Node.js", "MySQL", "Next.JS", "Tailwind", "Swagger Open API", "Prisma ORM", "Docker"],
+    description:
+      "Content Management System for company profile built with NestJS.",
+    highlights: [
+      "Custom CMS features",
+      "Built with modern Node.js framework (NestJS)",
+    ],
+    tech: [
+      "NestJS",
+      "TypeScript",
+      "Node.js",
+      "MySQL",
+      "Next.JS",
+      "Tailwind",
+      "Swagger Open API",
+      "Prisma ORM",
+      "Docker",
+    ],
     github: "#",
   },
   {
@@ -100,8 +126,12 @@ const projects: Project[] = [
     title: "ReflectQ App",
     category: ["Mobile", "Backend"],
     year: "2024",
-    description: "ReflectQ is an application built with Supabase providing a scalable backend.",
-    highlights: ["Real-time data synchronization", "Powered by Supabase for backend as a service"],
+    description:
+      "ReflectQ is an application built with Supabase providing a scalable backend.",
+    highlights: [
+      "Real-time data synchronization",
+      "Powered by Supabase for backend as a service",
+    ],
     tech: ["Supabase", "React Native", "PostgreSQL", "OAuth", "CornJob"],
     github: "#",
   },
@@ -110,9 +140,20 @@ const projects: Project[] = [
     title: "Ticketing IT Helpdesk PT.Wavetek Integra Nusa",
     category: ["Web", "Full-Stack"],
     year: "2024",
-    description: "An IT helpdesk ticketing system built with CodeIgniter to manage internal IT issues.",
-    highlights: ["Issue tracking and resolution management", "User-friendly interface for submitting tickets"],
-    tech: ["CodeIgniter", "PHP", "MySQL", "Bootstrap", "Admin LTE", "Data Table"],
+    description:
+      "An IT helpdesk ticketing system built with CodeIgniter to manage internal IT issues.",
+    highlights: [
+      "Issue tracking and resolution management",
+      "User-friendly interface for submitting tickets",
+    ],
+    tech: [
+      "CodeIgniter",
+      "PHP",
+      "MySQL",
+      "Bootstrap",
+      "Admin LTE",
+      "Data Table",
+    ],
     github: "#",
   },
 ];
@@ -128,7 +169,7 @@ const projectCategories = [
 type ViewType = "experience" | "projects";
 
 /* ── Animated Timeline Line ── */
-function useTimelineScroll(ref: React.RefObject<HTMLDivElement>) {
+function useTimelineScroll(ref: React.RefObject<HTMLDivElement | null>) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -559,9 +600,7 @@ export const Experience = () => {
           <div className="rfm-exp-header">
             <div className="rfm-section-label">{t.experience.label}</div>
             <h2 className="rfm-exp-title">{t.experience.title}</h2>
-            <p className="rfm-exp-subtitle">
-              {t.experience.subtitle}
-            </p>
+            <p className="rfm-exp-subtitle">{t.experience.subtitle}</p>
           </div>
 
           {/* Toggle */}
@@ -573,10 +612,13 @@ export const Experience = () => {
                   className={`rfm-toggle-btn ${activeView === v ? "rfm-toggle-active" : "rfm-toggle-idle"}`}
                   onClick={() => {
                     setActiveView(v);
-                    if (v === "experience") setProjectFilter(t.experience.projects.categories[0]);
+                    if (v === "experience")
+                      setProjectFilter(t.experience.projects.categories[0]);
                   }}
                 >
-                  {v === "experience" ? t.experience.toggleExp : t.experience.toggleProj}
+                  {v === "experience"
+                    ? t.experience.toggleExp
+                    : t.experience.toggleProj}
                 </button>
               ))}
             </div>
