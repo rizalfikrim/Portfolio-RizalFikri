@@ -67,7 +67,7 @@ const projects: Project[] = [
       "Intuitive user interface for tracking expenses",
     ],
     tech: ["Flutter", "Dart", "Hive Flutter"],
-    github: "#",
+    github: "https://github.com/RizalFikri117/Money-Tracker---Flutter.git",
   },
   {
     id: "2",
@@ -95,7 +95,7 @@ const projects: Project[] = [
       "Digital memo tracking and archiving",
     ],
     tech: ["CodeIgniter", "PHP", "MySQL"],
-    github: "#",
+    github: "https://github.com/RizalFikri117/Nota-Dinas.git",
   },
   {
     id: "4",
@@ -119,7 +119,7 @@ const projects: Project[] = [
       "Prisma ORM",
       "Docker",
     ],
-    github: "#",
+    github: "https://migrasi.id",
   },
   {
     id: "5",
@@ -133,7 +133,7 @@ const projects: Project[] = [
       "Powered by Supabase for backend as a service",
     ],
     tech: ["Supabase", "React Native", "PostgreSQL", "OAuth", "CornJob"],
-    github: "#",
+    github: "https://rflq.netlify.app/",
   },
   {
     id: "6",
@@ -158,27 +158,16 @@ const projects: Project[] = [
   },
 ];
 
-const projectCategories = [
-  "All",
-  "Backend",
-  "API",
-  "Full-Stack",
-  "Web",
-  "Mobile",
-];
 type ViewType = "experience" | "projects";
 
-/* ── Animated Timeline Line ── */
 function useTimelineScroll(ref: React.RefObject<HTMLDivElement | null>) {
   const [progress, setProgress] = useState(0);
-
   useEffect(() => {
     const handler = () => {
       const el = ref.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
       const windowH = window.innerHeight;
-      // progress 0 → 1 as the timeline scrolls from entering viewport to fully passed
       const total = rect.height + windowH;
       const scrolled = windowH - rect.top;
       const p = Math.min(1, Math.max(0, scrolled / total));
@@ -188,29 +177,25 @@ function useTimelineScroll(ref: React.RefObject<HTMLDivElement | null>) {
     handler();
     return () => window.removeEventListener("scroll", handler);
   }, [ref]);
-
   return progress;
 }
 
-/* ── Card entrance animation ── */
 function useRevealOnScroll() {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) setVisible(true);
-        else setVisible(false); // reverse when scrolling back up
+        else setVisible(false);
       },
       { threshold: 0.15 },
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
-
   return { ref, visible };
 }
 
@@ -218,6 +203,7 @@ export const Experience = () => {
   const { t } = useLanguage();
   const [activeView, setActiveView] = useState<ViewType>("experience");
   const [projectFilter, setProjectFilter] = useState("All");
+  const [carouselIndex, setCarouselIndex] = useState(0);
   const timelineRef = useRef<HTMLDivElement>(null);
   const lineProgress = useTimelineScroll(timelineRef);
 
@@ -239,15 +225,12 @@ export const Experience = () => {
           padding: 100px 0;
           font-family: 'Rajdhani', 'Segoe UI', sans-serif;
         }
-
         .rfm-exp-inner {
           max-width: 1300px;
           margin: 0 auto;
           padding: 0 clamp(20px, 4vw, 52px);
         }
-
         .rfm-exp-header { text-align: center; margin-bottom: 56px; }
-
         .rfm-section-label {
           display: inline-flex; align-items: center; gap: 9px;
           background: rgba(0,212,255,0.07);
@@ -256,13 +239,11 @@ export const Experience = () => {
           font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700;
           letter-spacing: 2.5px; color: #00d4ff; margin-bottom: 20px;
         }
-
         .rfm-exp-title {
           font-family: 'Orbitron', monospace;
           font-size: clamp(28px, 3.5vw, 46px);
           font-weight: 900; color: #dde8f8; margin: 0 0 14px;
         }
-
         .rfm-exp-subtitle {
           color: rgba(255,255,255,0.38); font-size: 15px; margin: 0; line-height: 1.8;
         }
@@ -276,8 +257,7 @@ export const Experience = () => {
           border-radius: 12px; padding: 4px;
         }
         .rfm-toggle-btn {
-          padding: 11px 32px;
-          border-radius: 9px;
+          padding: 11px 32px; border-radius: 9px;
           font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700;
           letter-spacing: 1.5px; cursor: pointer; border: none; transition: all 0.22s;
         }
@@ -312,108 +292,56 @@ export const Experience = () => {
           color: rgba(255,255,255,0.75);
         }
 
-        /* ── Timeline ── */
+        /* Timeline */
         .rfm-timeline { position: relative; padding: 0 0 20px; }
-
-        /* Track (always visible faint line) */
         .rfm-timeline-track {
-          position: absolute;
-          left: 50%; transform: translateX(-50%);
-          top: 0; bottom: 0;
-          width: 2px;
-          background: rgba(255,255,255,0.05);
-          pointer-events: none;
+          position: absolute; left: 50%; transform: translateX(-50%);
+          top: 0; bottom: 0; width: 2px;
+          background: rgba(255,255,255,0.05); pointer-events: none;
         }
-
-        /* Animated progress line */
         .rfm-timeline-progress {
-          position: absolute;
-          left: 50%; transform: translateX(-50%);
-          top: 0;
-          width: 2px;
-          background: linear-gradient(to bottom,
-            rgba(0,212,255,0.9),
-            rgba(124,58,237,0.85),
-            rgba(245,158,11,0.6)
-          );
-          pointer-events: none;
-          transition: height 0.08s linear;
-          /* Glow effect */
+          position: absolute; left: 50%; transform: translateX(-50%);
+          top: 0; width: 2px;
+          background: linear-gradient(to bottom, rgba(0,212,255,0.9), rgba(124,58,237,0.85), rgba(245,158,11,0.6));
+          pointer-events: none; transition: height 0.08s linear;
           box-shadow: 0 0 8px rgba(0,212,255,0.5), 0 0 20px rgba(0,212,255,0.15);
         }
-
-        /* Glowing tip at bottom of progress line */
         .rfm-timeline-progress::after {
-          content: '';
-          position: absolute;
-          bottom: -5px;
+          content: ''; position: absolute; bottom: -5px;
           left: 50%; transform: translateX(-50%);
           width: 10px; height: 10px; border-radius: 50%;
           background: #00d4ff;
           box-shadow: 0 0 0 4px rgba(0,212,255,0.2), 0 0 18px rgba(0,212,255,0.6);
         }
-
         .rfm-timeline-items {
           display: flex; flex-direction: column; gap: 56px; position: relative; z-index: 2;
         }
-
-        /* Desktop row layout */
         .rfm-timeline-row {
-          display: grid;
-          grid-template-columns: 1fr 60px 1fr;
-          align-items: center;
+          display: grid; grid-template-columns: 1fr 60px 1fr; align-items: center;
         }
-
-        /* Card slide-in transitions */
-        .rfm-card-animate {
-          transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-        .rfm-card-animate.hidden-left {
-          opacity: 0;
-          transform: translateX(-40px);
-        }
-        .rfm-card-animate.hidden-right {
-          opacity: 0;
-          transform: translateX(40px);
-        }
-        .rfm-card-animate.visible {
-          opacity: 1;
-          transform: translateX(0);
-        }
-
-        .rfm-timeline-dot-wrap {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
+        .rfm-card-animate { transition: opacity 0.6s ease, transform 0.6s ease; }
+        .rfm-card-animate.hidden-left { opacity: 0; transform: translateX(-40px); }
+        .rfm-card-animate.hidden-right { opacity: 0; transform: translateX(40px); }
+        .rfm-card-animate.visible { opacity: 1; transform: translateX(0); }
+        .rfm-timeline-dot-wrap { display: flex; justify-content: center; align-items: center; }
         .rfm-timeline-dot {
-          width: 14px; height: 14px; border-radius: 50%;
-          background: #00d4ff;
+          width: 14px; height: 14px; border-radius: 50%; background: #00d4ff;
           box-shadow: 0 0 0 4px rgba(0,212,255,0.15), 0 0 14px rgba(0,212,255,0.4);
-          flex-shrink: 0;
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-          z-index: 3;
-          position: relative;
+          flex-shrink: 0; transition: transform 0.3s ease, box-shadow 0.3s ease;
+          z-index: 3; position: relative;
         }
         .rfm-timeline-dot.dot-active {
           transform: scale(1.3);
           box-shadow: 0 0 0 6px rgba(0,212,255,0.2), 0 0 24px rgba(0,212,255,0.6);
         }
-
-        .rfm-timeline-slot {
-          display: flex;
-        }
+        .rfm-timeline-slot { display: flex; }
         .rfm-timeline-slot.slot-left { justify-content: flex-end; }
         .rfm-timeline-slot.slot-right { justify-content: flex-start; }
-
         .rfm-exp-card {
-          width: 100%;
-          max-width: 420px;
+          width: 100%; max-width: 420px;
           background: rgba(255,255,255,0.03);
           border: 1px solid rgba(0,212,255,0.1);
-          border-radius: 16px;
-          padding: 24px;
+          border-radius: 16px; padding: 24px;
           transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
         }
         .rfm-exp-card:hover {
@@ -421,34 +349,21 @@ export const Experience = () => {
           transform: translateY(-3px);
           box-shadow: 0 8px 32px rgba(0,212,255,0.08);
         }
-
         .rfm-exp-position {
           font-family: 'Orbitron', monospace;
-          font-size: 15px; font-weight: 700;
-          color: #dde8f8; margin: 0 0 5px;
+          font-size: 15px; font-weight: 700; color: #dde8f8; margin: 0 0 5px;
         }
-        .rfm-exp-company {
-          font-size: 14px; font-weight: 600;
-          color: #00d4ff; margin: 0 0 8px;
-        }
+        .rfm-exp-company { font-size: 14px; font-weight: 600; color: #00d4ff; margin: 0 0 8px; }
         .rfm-exp-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
         .rfm-badge-type {
-          padding: 3px 10px; border-radius: 100px;
-          font-size: 11px; font-weight: 600;
-          background: rgba(0,212,255,0.1);
-          border: 1px solid rgba(0,212,255,0.2);
-          color: #00d4ff;
+          padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 600;
+          background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2); color: #00d4ff;
         }
         .rfm-badge-period {
-          padding: 3px 10px; border-radius: 100px;
-          font-size: 11px; font-weight: 600;
-          background: rgba(124,58,237,0.1);
-          border: 1px solid rgba(124,58,237,0.2);
-          color: #a78bfa;
+          padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 600;
+          background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2); color: #a78bfa;
         }
-        .rfm-exp-location {
-          font-size: 12px; color: rgba(255,255,255,0.3); margin: 0 0 12px;
-        }
+        .rfm-exp-location { font-size: 12px; color: rgba(255,255,255,0.3); margin: 0 0 12px; }
         .rfm-exp-desc {
           list-style: none; padding: 0; margin: 0 0 14px;
           display: flex; flex-direction: column; gap: 6px;
@@ -458,19 +373,14 @@ export const Experience = () => {
           font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.65;
         }
         .rfm-exp-desc li::before { content: "▸"; color: #00d4ff; font-size: 10px; margin-top: 3px; flex-shrink: 0; }
-
         .rfm-tech-chips { display: flex; flex-wrap: wrap; gap: 6px; }
         .rfm-tech-chip {
-          padding: 3px 10px; border-radius: 6px;
-          font-size: 11px; font-weight: 600;
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(0,212,255,0.12);
-          color: rgba(255,255,255,0.52);
-          transition: all 0.2s;
+          padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
+          background: rgba(255,255,255,0.04); border: 1px solid rgba(0,212,255,0.12);
+          color: rgba(255,255,255,0.52); transition: all 0.2s;
         }
         .rfm-tech-chip:hover {
-          background: rgba(0,212,255,0.08);
-          color: rgba(255,255,255,0.8);
+          background: rgba(0,212,255,0.08); color: rgba(255,255,255,0.8);
           border-color: rgba(0,212,255,0.3);
         }
         .rfm-exp-icon-wrap {
@@ -480,117 +390,163 @@ export const Experience = () => {
           font-size: 18px; flex-shrink: 0;
         }
 
-        /* ── Projects Grid ── */
-        .rfm-proj-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-          gap: 24px;
+        /* ── Carousel ── */
+
+        /* Wrapper hanya untuk track cards, overflow hidden di sini */
+        .rfm-carousel-wrap {
+          position: relative;
+          width: 100%;
+          overflow: hidden;
+          padding: 40px 0;
         }
+
+        .rfm-carousel-track {
+          display: flex;
+          transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          align-items: center;
+          gap: 20px;
+        }
+
         .rfm-proj-card {
+          flex: 0 0 600px;
+          height: 220px;
           background: rgba(255,255,255,0.03);
           border: 1px solid rgba(0,212,255,0.1);
-          border-radius: 16px; overflow: hidden;
-          transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+          border-radius: 16px;
+          overflow: hidden;
+          display: flex;
+          transition: all 0.5s ease;
+          opacity: 0.45;
+          transform: scale(0.88);
+          pointer-events: none;
         }
-        .rfm-proj-card:hover {
-          border-color: rgba(0,212,255,0.3);
-          transform: translateY(-4px);
-          box-shadow: 0 8px 32px rgba(0,212,255,0.08);
+        .rfm-proj-card.active {
+          opacity: 1; transform: scale(1);
+          border-color: rgba(0,212,255,0.35);
+          box-shadow: 0 0 40px rgba(0,212,255,0.12), 0 8px 32px rgba(0,0,0,0.4);
+          pointer-events: auto;
+        }
+        .rfm-proj-card.adjacent {
+          opacity: 0.65; transform: scale(0.93);
+          pointer-events: auto; cursor: pointer;
         }
         .rfm-proj-thumb {
-          height: 160px;
-          background: linear-gradient(135deg, rgba(0,212,255,0.1) 0%, rgba(124,58,237,0.12) 100%);
+          width: 200px; min-width: 200px;
+          background: linear-gradient(135deg, rgba(0,212,255,0.1) 0%, rgba(124,58,237,0.15) 100%);
           display: flex; align-items: center; justify-content: center;
-          font-size: 40px; border-bottom: 1px solid rgba(0,212,255,0.08);
+          font-size: 48px;
+          border-right: 1px solid rgba(0,212,255,0.08); flex-shrink: 0;
         }
-        .rfm-proj-body { padding: 20px; }
+        .rfm-proj-body {
+          padding: 20px 22px; display: flex; flex-direction: column;
+          justify-content: space-between; flex: 1; overflow: hidden;
+        }
         .rfm-proj-meta {
-          display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
+          display: flex; align-items: center;
+          justify-content: space-between; margin-bottom: 8px;
         }
         .rfm-proj-cat {
-          padding: 3px 10px; border-radius: 100px;
-          font-size: 11px; font-weight: 600;
-          background: rgba(0,212,255,0.1);
-          border: 1px solid rgba(0,212,255,0.2);
-          color: #00d4ff;
+          padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 600;
+          background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2); color: #00d4ff;
         }
         .rfm-proj-year { font-size: 12px; color: rgba(255,255,255,0.28); }
         .rfm-proj-title {
-          font-family: 'Orbitron', monospace;
-          font-size: 15px; font-weight: 700;
-          color: #dde8f8; margin: 0 0 8px;
+          font-family: 'Orbitron', monospace; font-size: 14px; font-weight: 700;
+          color: #dde8f8; margin: 0 0 6px;
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .rfm-proj-desc {
-          font-size: 13px; color: rgba(255,255,255,0.42);
-          line-height: 1.7; margin: 0 0 12px;
-          display: -webkit-box; -webkit-line-clamp: 3;
+          font-size: 12px; color: rgba(255,255,255,0.42); line-height: 1.6; margin: 0 0 10px;
+          display: -webkit-box; -webkit-line-clamp: 2;
           -webkit-box-orient: vertical; overflow: hidden;
         }
         .rfm-proj-highlights {
-          list-style: none; padding: 0; margin: 0 0 12px;
-          display: flex; flex-direction: column; gap: 4px;
+          list-style: none; padding: 0; margin: 0 0 10px;
+          display: flex; flex-direction: column; gap: 3px;
         }
         .rfm-proj-highlights li {
           display: flex; align-items: flex-start; gap: 6px;
-          font-size: 12px; color: rgba(255,255,255,0.38);
+          font-size: 11px; color: rgba(255,255,255,0.35);
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .rfm-proj-highlights li::before { content: "•"; color: #00d4ff; flex-shrink: 0; }
-        .rfm-proj-links { display: flex; gap: 16px; margin-top: 14px; }
+        .rfm-proj-links { display: flex; gap: 14px; }
         .rfm-proj-link {
           display: flex; align-items: center; gap: 5px;
           font-size: 12px; font-weight: 600;
-          color: rgba(255,255,255,0.4);
-          text-decoration: none; transition: color 0.2s;
+          color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.2s;
         }
         .rfm-proj-link:hover { color: #00d4ff; }
 
-        /* ── Mobile Responsive ── */
+        /* ── Nav: TERPISAH dari carousel-wrap ── */
+        .rfm-carousel-nav {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          margin-top: 20px;
+          padding: 0 8px;
+          box-sizing: border-box;
+        }
+
+        .rfm-carousel-nav-center {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .rfm-carousel-dots {
+          display: flex; gap: 8px; align-items: center; justify-content: center;
+        }
+        .rfm-carousel-dot {
+          width: 6px; height: 6px; border-radius: 50%;
+          background: rgba(255,255,255,0.15);
+          transition: all 0.22s; cursor: pointer; border: none;
+        }
+        .rfm-carousel-dot.dot-on {
+          background: #00d4ff; width: 20px; border-radius: 3px;
+          box-shadow: 0 0 8px rgba(0,212,255,0.5);
+        }
+        .rfm-carousel-counter {
+          font-family: 'Orbitron', monospace; font-size: 11px;
+          color: rgba(255,255,255,0.3); letter-spacing: 1px; text-align: center;
+        }
+        .rfm-carousel-btn {
+          width: 44px; height: 44px; border-radius: 50%;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(0,212,255,0.2);
+          color: #00d4ff; font-size: 18px;
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; transition: all 0.22s;
+          flex-shrink: 0;
+        }
+        .rfm-carousel-btn:hover {
+          background: rgba(0,212,255,0.1); border-color: #00d4ff;
+          box-shadow: 0 0 16px rgba(0,212,255,0.2);
+        }
+        .rfm-carousel-btn:disabled { opacity: 0.25; cursor: default; box-shadow: none; }
+
+        /* Mobile */
         @media (max-width: 860px) {
-          .rfm-timeline-track,
-          .rfm-timeline-progress { display: none; }
-
-          /* Switch to single-column centered */
-          .rfm-timeline-row {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0;
-          }
-
-          .rfm-timeline-slot {
-            width: 100%;
-            justify-content: center !important;
-          }
-
-          .rfm-timeline-dot-wrap {
-            width: 100%;
-            padding: 16px 0;
-            position: relative;
-          }
-
-          /* Mobile connector line between cards */
-          .rfm-timeline-dot-wrap::before {
-            content: '';
-            position: absolute;
-            top: 0; bottom: 0;
-            left: 50%; transform: translateX(-50%);
-            width: 2px;
-            background: linear-gradient(to bottom, rgba(0,212,255,0.3), rgba(124,58,237,0.3));
-          }
-
-          .rfm-exp-card {
-            max-width: 100% !important;
-          }
-
-          .rfm-card-animate.hidden-left,
-          .rfm-card-animate.hidden-right {
-            opacity: 0;
-            transform: translateY(24px);
-          }
-          .rfm-card-animate.visible {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          .rfm-timeline-row { grid-template-columns: 1fr 32px 1fr; gap: 0; }
+          .rfm-timeline-items { gap: 32px; }
+          .rfm-exp-card { max-width: 100% !important; padding: 16px !important; }
+          .rfm-exp-position { font-size: 12px !important; }
+          .rfm-exp-company { font-size: 12px !important; }
+          .rfm-exp-desc li { font-size: 11px !important; }
+          .rfm-badge-type, .rfm-badge-period { font-size: 10px !important; padding: 2px 8px !important; }
+          .rfm-tech-chip { font-size: 10px !important; padding: 2px 7px !important; }
+          .rfm-exp-icon-wrap { width: 32px !important; height: 32px !important; font-size: 14px !important; }
+          .rfm-timeline-dot { width: 10px !important; height: 10px !important; }
+          .rfm-card-animate.hidden-left { opacity: 0; transform: translateX(-20px); }
+          .rfm-card-animate.hidden-right { opacity: 0; transform: translateX(20px); }
+          .rfm-card-animate.visible { opacity: 1; transform: translateX(0); }
+          .rfm-proj-card { flex: 0 0 85vw !important; height: 180px !important; }
+          .rfm-proj-thumb { width: 120px !important; min-width: 120px !important; font-size: 32px !important; }
+          .rfm-proj-title { font-size: 12px !important; }
+          .rfm-proj-desc { font-size: 11px !important; }
         }
       `}</style>
 
@@ -624,20 +580,14 @@ export const Experience = () => {
             </div>
           </div>
 
-          {/* ── Experience Timeline ── */}
+          {/* Experience Timeline */}
           {activeView === "experience" && (
             <div className="rfm-timeline" ref={timelineRef}>
-              {/* Static track */}
               <div className="rfm-timeline-track" />
-
-              {/* Animated progress line */}
               <div
                 className="rfm-timeline-progress"
-                style={{
-                  height: `${lineProgress * 100}%`,
-                }}
+                style={{ height: `${lineProgress * 100}%` }}
               />
-
               <div className="rfm-timeline-items">
                 {experiences.map((exp, index) => {
                   const isLeft = index % 2 === 0;
@@ -647,78 +597,181 @@ export const Experience = () => {
             </div>
           )}
 
-          {/* ── Projects ── */}
+          {/* Projects */}
           {activeView === "projects" && (
             <>
               <div className="rfm-filter-row">
                 {t.experience.projects.categories.map((cat) => (
                   <button
                     key={cat}
-                    className={`rfm-filter-chip ${projectFilter === cat || (projectFilter === "All" && cat === t.experience.projects.categories[0]) ? "rfm-filter-active" : "rfm-filter-idle"}`}
-                    onClick={() => setProjectFilter(cat)}
+                    className={`rfm-filter-chip ${
+                      projectFilter === cat ||
+                      (projectFilter === "All" &&
+                        cat === t.experience.projects.categories[0])
+                        ? "rfm-filter-active"
+                        : "rfm-filter-idle"
+                    }`}
+                    onClick={() => {
+                      setProjectFilter(cat);
+                      setCarouselIndex(0);
+                    }}
                   >
                     {cat}
                   </button>
                 ))}
               </div>
 
-              <div className="rfm-proj-grid">
-                {filteredProjects.map((proj) => (
-                  <div key={proj.id} className="rfm-proj-card">
-                    <div className="rfm-proj-thumb">💻</div>
-                    <div className="rfm-proj-body">
-                      <div className="rfm-proj-meta">
-                        <span className="rfm-proj-cat">{proj.category}</span>
-                        <span className="rfm-proj-year">{proj.year}</span>
-                      </div>
-                      <h3 className="rfm-proj-title">{proj.title}</h3>
-                      <p className="rfm-proj-desc">{proj.description}</p>
-                      <ul className="rfm-proj-highlights">
-                        {proj.highlights.map((h) => (
-                          <li key={h}>{h}</li>
-                        ))}
-                      </ul>
-                      <div className="rfm-tech-chips">
-                        {proj.tech.slice(0, 4).map((t) => (
-                          <span key={t} className="rfm-tech-chip">
-                            {t}
-                          </span>
-                        ))}
-                        {proj.tech.length > 4 && (
-                          <span
-                            className="rfm-tech-chip"
-                            style={{ color: "rgba(255,255,255,0.28)" }}
-                          >
-                            +{proj.tech.length - 4}
-                          </span>
-                        )}
-                      </div>
-                      <div className="rfm-proj-links">
-                        {proj.github && (
-                          <a
-                            href={proj.github}
-                            className="rfm-proj-link"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {t.experience.projects.btnCode}
-                          </a>
-                        )}
-                        {proj.live && (
-                          <a
-                            href={proj.live}
-                            className="rfm-proj-link"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {t.experience.projects.btnLive}
-                          </a>
-                        )}
+              {(() => {
+                const total = filteredProjects.length;
+                const offset =
+                  -(carouselIndex * 620) +
+                  (typeof window !== "undefined"
+                    ? window.innerWidth / 2
+                    : 400) -
+                  310;
+
+                return (
+                  <>
+                    {/* ✅ Carousel wrap: HANYA berisi track, punya overflow:hidden */}
+                    <div className="rfm-carousel-wrap">
+                      <div
+                        className="rfm-carousel-track"
+                        style={{ transform: `translateX(${offset}px)` }}
+                      >
+                        {filteredProjects.map((proj, i) => {
+                          const diff = i - carouselIndex;
+                          const cls =
+                            diff === 0
+                              ? "active"
+                              : Math.abs(diff) === 1
+                                ? "adjacent"
+                                : "";
+                          return (
+                            <div
+                              key={proj.id}
+                              className={`rfm-proj-card ${cls}`}
+                              onClick={() =>
+                                cls === "adjacent" && setCarouselIndex(i)
+                              }
+                            >
+                              <div className="rfm-proj-thumb">💻</div>
+                              <div className="rfm-proj-body">
+                                <div>
+                                  <div className="rfm-proj-meta">
+                                    <span className="rfm-proj-cat">
+                                      {proj.category[0]}
+                                    </span>
+                                    <span className="rfm-proj-year">
+                                      {proj.year}
+                                    </span>
+                                  </div>
+                                  <h3 className="rfm-proj-title">
+                                    {proj.title}
+                                  </h3>
+                                  <p className="rfm-proj-desc">
+                                    {proj.description}
+                                  </p>
+                                  <ul className="rfm-proj-highlights">
+                                    {proj.highlights.map((h) => (
+                                      <li key={h}>{h}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    flexWrap: "wrap",
+                                    gap: 8,
+                                  }}
+                                >
+                                  <div className="rfm-tech-chips">
+                                    {proj.tech.slice(0, 3).map((tech) => (
+                                      <span
+                                        key={tech}
+                                        className="rfm-tech-chip"
+                                      >
+                                        {tech}
+                                      </span>
+                                    ))}
+                                    {proj.tech.length > 3 && (
+                                      <span
+                                        className="rfm-tech-chip"
+                                        style={{
+                                          color: "rgba(255,255,255,0.28)",
+                                        }}
+                                      >
+                                        +{proj.tech.length - 3}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="rfm-proj-links">
+                                    {proj.github && (
+                                      <a
+                                        href={proj.github}
+                                        className="rfm-proj-link"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        {t.experience.projects.btnCode}
+                                      </a>
+                                    )}
+                                    {proj.live && (
+                                      <a
+                                        href={proj.live}
+                                        className="rfm-proj-link"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        {t.experience.projects.btnLive}
+                                      </a>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                    {/* ✅ Nav: DI LUAR carousel-wrap, tidak kena overflow:hidden */}
+                    <div className="rfm-carousel-nav">
+                      <button
+                        className="rfm-carousel-btn"
+                        onClick={() => setCarouselIndex((i) => i - 1)}
+                        disabled={carouselIndex === 0}
+                      >
+                        ←
+                      </button>
+
+                      <div className="rfm-carousel-nav-center">
+                        <div className="rfm-carousel-dots">
+                          {filteredProjects.map((_, i) => (
+                            <button
+                              key={i}
+                              className={`rfm-carousel-dot ${i === carouselIndex ? "dot-on" : ""}`}
+                              onClick={() => setCarouselIndex(i)}
+                            />
+                          ))}
+                        </div>
+                        <span className="rfm-carousel-counter">
+                          {String(carouselIndex + 1).padStart(2, "0")} /{" "}
+                          {String(total).padStart(2, "0")}
+                        </span>
+                      </div>
+
+                      <button
+                        className="rfm-carousel-btn"
+                        onClick={() => setCarouselIndex((i) => i + 1)}
+                        disabled={carouselIndex === total - 1}
+                      >
+                        →
+                      </button>
+                    </div>
+                  </>
+                );
+              })()}
             </>
           )}
         </div>
@@ -727,13 +780,10 @@ export const Experience = () => {
   );
 };
 
-/* ── Timeline Row with scroll reveal ── */
 function TimelineRow({ exp, isLeft }: { exp: Experience; isLeft: boolean }) {
   const { ref, visible } = useRevealOnScroll();
-
   return (
     <div className="rfm-timeline-row" ref={ref}>
-      {/* Left slot */}
       <div className="rfm-timeline-slot slot-left">
         {isLeft && (
           <div
@@ -746,13 +796,9 @@ function TimelineRow({ exp, isLeft }: { exp: Experience; isLeft: boolean }) {
           </div>
         )}
       </div>
-
-      {/* Center dot */}
       <div className="rfm-timeline-dot-wrap">
         <div className={`rfm-timeline-dot ${visible ? "dot-active" : ""}`} />
       </div>
-
-      {/* Right slot */}
       <div className="rfm-timeline-slot slot-right">
         {!isLeft && (
           <div
@@ -769,7 +815,6 @@ function TimelineRow({ exp, isLeft }: { exp: Experience; isLeft: boolean }) {
   );
 }
 
-/* ── Sub-component ── */
 function ExpCard({ exp }: { exp: Experience }) {
   return (
     <>
@@ -799,9 +844,9 @@ function ExpCard({ exp }: { exp: Experience }) {
         ))}
       </ul>
       <div className="rfm-tech-chips">
-        {exp.tech.map((t) => (
-          <span key={t} className="rfm-tech-chip">
-            {t}
+        {exp.tech.map((tech) => (
+          <span key={tech} className="rfm-tech-chip">
+            {tech}
           </span>
         ))}
       </div>

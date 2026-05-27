@@ -472,9 +472,13 @@ export const Certificates = () => {
         /* Stage */
         .rfm-carousel-wrap {
           position: relative; height: 430px;
-          perspective: 1400px; margin-bottom: 36px;
+          perspective: 1200px; margin-bottom: 36px;
+          overflow: visible;
         }
-        .rfm-carousel-stage { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; }
+        .rfm-carousel-stage { 
+          position: relative; width: 100%; height: 100%; 
+          transform-style: preserve-3d;
+        }
 
         /* Card */
         .rfm-c-card {
@@ -548,17 +552,23 @@ export const Certificates = () => {
         /* Nav arrows */
         .rfm-carousel-nav {
           position: absolute; top: 50%; transform: translateY(-50%);
-          width: 46px; height: 46px;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(0,212,255,0.25); border-radius: 50%;
+          width: 48px; height: 48px;
+          background: rgba(0,212,255,0.1);
+          border: 1.5px solid rgba(0,212,255,0.4); border-radius: 50%;
           display: flex; align-items: center; justify-content: center;
-          cursor: pointer; z-index: 10;
-          transition: background 0.2s, border-color 0.2s;
-          color: #00d4ff; font-size: 22px; line-height: 1; user-select: none;
+          cursor: pointer; z-index: 20;
+          transition: all 0.3s ease;
+          color: #00d4ff; font-size: 24px; line-height: 1; user-select: none;
+          font-weight: bold;
         }
-        .rfm-carousel-nav:hover { background: rgba(0,212,255,0.12); border-color: rgba(0,212,255,0.5); }
-        .rfm-carousel-nav.left  { left: 0; }
-        .rfm-carousel-nav.right { right: 0; }
+        .rfm-carousel-nav:hover { 
+          background: rgba(0,212,255,0.2); 
+          border-color: rgba(0,212,255,0.7);
+          box-shadow: 0 0 20px rgba(0,212,255,0.3);
+          transform: translateY(-50%) scale(1.1);
+        }
+        .rfm-carousel-nav.left  { left: 16px; }
+        .rfm-carousel-nav.right { right: 16px; }
 
         /* Dots */
         .rfm-carousel-dots {
@@ -600,6 +610,9 @@ export const Certificates = () => {
           .rfm-c-card { width: 250px; }
           .rfm-c-img-zone { height: 140px; }
           .rfm-cert-stats { grid-template-columns: 1fr; }
+          .rfm-carousel-nav.left  { left: 8px; }
+          .rfm-carousel-nav.right { right: 8px; }
+          .rfm-carousel-nav { width: 40px; height: 40px; font-size: 20px; }
         }
       `}</style>
 
@@ -633,7 +646,7 @@ export const Certificates = () => {
                     key={slot}
                     className={`rfm-c-card${isActive ? " is-active" : ""}`}
                     style={{
-                      transform: `translate(-50%,-50%) translateX(${dx}px) translateZ(${z}px) rotateY(${rotY}deg) scale(${scale})`,
+                      transform: `translate(-50%, -50%) translateX(${dx}px) translateZ(${z}px) rotateY(${rotY}deg) scale(${scale})`,
                       opacity,
                       transition:
                         "transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.45s ease",

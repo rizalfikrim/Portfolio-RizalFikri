@@ -8,8 +8,9 @@ import Lanyard from "../ui/Lanyard";
 const TITLES = [
   "Backend Developer",
   "API Architect",
-  "System Engineer",
+  "Web Developer",
   "Problem Solver",
+  "Fullstack Developer",
 ];
 
 /* ── Smooth lerp helper ── */
@@ -999,6 +1000,7 @@ export default function Hero() {
             gap: 0 !important;
           }
           .rfm-robot-wrap {
+          display: none !important;
             height: 64vw !important;
             min-height: 280px !important;
             order: -1;
@@ -1044,9 +1046,7 @@ export default function Hero() {
                 <span className="rfm-cursor" />
               </div>
 
-              <p className="rfm-bio">
-                {t.hero.bio}
-              </p>
+              <p className="rfm-bio">{t.hero.bio}</p>
 
               <div className="rfm-stats">
                 {[
@@ -1074,7 +1074,12 @@ export default function Hero() {
                 </button>
                 <button
                   className="rfm-btnOutline"
-                  onClick={() => window.open("https://drive.google.com/file/d/1uMT1Tdsd4iJk4MnG0VUD8FspHxiSIRb6/view?usp=sharing", "_blank")}
+                  onClick={() =>
+                    window.open(
+                      "https://drive.google.com/file/d/1uMT1Tdsd4iJk4MnG0VUD8FspHxiSIRb6/view?usp=sharing",
+                      "_blank",
+                    )
+                  }
                 >
                   DOWNLOAD CV
                 </button>

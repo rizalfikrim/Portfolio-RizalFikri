@@ -12,7 +12,12 @@ export const id = {
     nameTop: "RIZAL",
     nameBot: "FIKRI MULYANA",
     status: "TERBUKA UNTUK BEKERJA",
-    titles: ["Backend Developer", "API Architect", "System Engineer", "Problem Solver"],
+    titles: [
+      "Backend Developer",
+      "API Architect",
+      "System Engineer",
+      "Problem Solver",
+    ],
     bio: "Junior Backend Developer dengan pengalaman membangun REST API dan sistem backend yang scalable.",
     btnContact: "Hubungi Saya",
     btnProjects: "Lihat Proyek",
@@ -25,7 +30,8 @@ export const id = {
   about: {
     label: "< TENTANG />",
     title: "Di Balik Kode",
-    subtitle: "Sekilas tentang latar belakang, fokus, dan apa yang mendorong perjalanan pengembangan saya.",
+    subtitle:
+      "Sekilas tentang latar belakang, fokus, dan apa yang mendorong perjalanan pengembangan saya.",
     bio1: "Saya adalah seorang Junior Backend Developer dengan pengalaman dalam membangun REST API dan sistem backend yang scalable. Perjalanan saya di dunia software development dimulai dari rasa ingin tahu tentang bagaimana segala sesuatu bekerja di balik layar — dan berkembang menjadi ketertarikan mendalam pada arsitektur backend yang efisien dan mudah dipelihara.",
     bio2: "Saya memiliki pengalaman menggunakan Express.js, NestJS, Laravel, dan CodeIgniter, serta solusi database seperti MySQL dan PostgreSQL. Ketika tidak sedang ngoding, saya suka mengeksplorasi teknologi baru atau berbagi pengetahuan dengan komunitas developer.",
     stats: {
@@ -47,19 +53,21 @@ export const id = {
   experience: {
     label: "< PENGALAMAN />",
     title: "Pengalaman & Proyek",
-    subtitle: "Tampilan karya backend, pengalaman, dan proyek siap produksi saya.",
+    subtitle:
+      "Tampilan karya backend, pengalaman, dan proyek siap produksi saya.",
     toggleExp: "PENGALAMAN",
     toggleProj: "PROYEK",
     projects: {
       categories: ["Semua", "Backend", "API", "Full-Stack", "Web", "Mobile"],
-      btnCode: "⌥ Kode",
+      btnCode: "⌥ Lihat",
       btnLive: "↗ Lihat",
     },
   },
   skills: {
     label: "< KEAHLIAN />",
     title: "Keahlian Teknis",
-    subtitle: "Gambaran komprehensif tentang keahlian dan alat backend yang saya gunakan setiap hari.",
+    subtitle:
+      "Gambaran komprehensif tentang keahlian dan alat backend yang saya gunakan setiap hari.",
     learningTitle: "Sedang Dipelajari",
     radarTitle: "Kemahiran Keseluruhan",
     radarSubtitle: "Distribusi keahlian fokus backend",
@@ -73,7 +81,8 @@ export const id = {
   certificates: {
     label: "KEAHLIAN TERSERTIFIKASI",
     title: "Kredensial Saya",
-    subtitle: "Sertifikasi terverifikasi yang memperkuat kemampuan backend dan komputasi awan yang ditampilkan dalam portofolio ini.",
+    subtitle:
+      "Sertifikasi terverifikasi yang memperkuat kemampuan backend dan komputasi awan yang ditampilkan dalam portofolio ini.",
     btnVerify: "Verifikasi ↗",
     stats: {
       total: "Total Sertifikat",
@@ -84,7 +93,8 @@ export const id = {
   contact: {
     label: "HUBUNGI SAYA",
     title: "Mari Bangun Sesuatu Yang Hebat Bersama",
-    subtitle: "Hubungi kapan saja untuk pekerjaan backend, desain API, atau kolaborasi.",
+    subtitle:
+      "Hubungi kapan saja untuk pekerjaan backend, desain API, atau kolaborasi.",
     follow: "Ikuti Saya",
     available: "Saat ini tersedia untuk pekerjaan lepas / purna waktu",
     formTitle: "Kirim Pesan",
