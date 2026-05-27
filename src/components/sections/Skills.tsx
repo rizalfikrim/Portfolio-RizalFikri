@@ -31,7 +31,7 @@ const skillCategories: Category[] = [
     category: "Database",
     icon: "🗄️",
     skills: [
-      { name: "PostgreSQL", icon: "🐘", level: 85 },
+      { name: "PostgreSQL", icon: "🐘", level: 75 },
       { name: "MySQL", icon: "🐬", level: 85 },
     ],
   },
@@ -43,6 +43,8 @@ const skillCategories: Category[] = [
       { name: "Python", icon: "🐍", level: 85 },
       { name: "PHP", icon: "🐘", level: 85 },
       { name: "Dart", icon: "🎯", level: 75 },
+      { name: "SQL", icon: "🗄️", level: 80 },
+      { name: "TypeScript", icon: "🔷", level: 75 },
     ],
   },
   {
@@ -51,7 +53,8 @@ const skillCategories: Category[] = [
     skills: [
       { name: "HTML/CSS", icon: "🌐", level: 90 },
       { name: "Bootstrap", icon: "🅱️", level: 85 },
-      { name: "Next.js", icon: "▲", level: 80 },
+      { name: "Next.js", icon: "▲", level: 70 },
+      { name: "React.js", icon: "⚛️", level: 65 },
     ],
   },
   {
@@ -62,11 +65,17 @@ const skillCategories: Category[] = [
       { name: "GitHub", icon: "🐙", level: 85 },
       { name: "Nginx", icon: "🟢", level: 75 },
       { name: "VPS", icon: "🖥️", level: 75 },
+      { name: "Google Cloud Console", icon: "☁️", level: 60 },
     ],
   },
 ];
 
-const learningSkills = ["Advanced Cloud", "Microservices Architecture", "CI/CD Pipelines", "GraphQL"];
+const learningSkills = [
+  "Advanced Cloud",
+  "Microservices Architecture",
+  "CI/CD Pipelines",
+  "GraphQL",
+];
 
 const overallSkills = [
   { name: "Backend", level: 85 },
@@ -78,7 +87,13 @@ const overallSkills = [
 ];
 
 /* ── Radar Chart ── */
-function RadarChart({ skills, t }: { skills: { name: string; level: number }[], t?: any }) {
+function RadarChart({
+  skills,
+  t,
+}: {
+  skills: { name: string; level: number }[];
+  t?: any;
+}) {
   const size = 220;
   const center = size / 2;
   const radius = center - 28;
@@ -391,9 +406,7 @@ export const Skills = () => {
           <div className="rfm-skills-header">
             <div className="rfm-section-label">{t.skills.label}</div>
             <h2 className="rfm-skills-title">{t.skills.title}</h2>
-            <p className="rfm-skills-subtitle">
-              {t.skills.subtitle}
-            </p>
+            <p className="rfm-skills-subtitle">{t.skills.subtitle}</p>
           </div>
 
           {/* Tabs */}

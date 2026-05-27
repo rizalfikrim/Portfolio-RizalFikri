@@ -58,7 +58,7 @@ const useLanguage = () => ({
   },
 });
 
-/* Add image: "/certs/your-file.jpg" to any entry when you have the files */
+/* Add image: "/certificate/your-file.jpg" to any entry when you have the files */
 const certificates: Certificate[] = [
   {
     id: "1",
@@ -66,6 +66,7 @@ const certificates: Certificate[] = [
     issuer: "BNSP",
     date: "N/A",
     category: "Professional",
+    image: "/certificate/bnsp.jpg",
   },
   {
     id: "2",
@@ -73,6 +74,7 @@ const certificates: Certificate[] = [
     issuer: "Google Cloud",
     date: "N/A",
     category: "Training",
+    image: "/certificate/google-cloud.png",
   },
   {
     id: "3",
@@ -80,13 +82,15 @@ const certificates: Certificate[] = [
     issuer: "IAI Indonesia",
     date: "N/A",
     category: "Professional",
+    image: "/certificate/IAII.jpg",
   },
   {
     id: "4",
     title: "TOEFL Prediction Test",
-    issuer: "N/A",
+    issuer: "Lembaga Tes Bahasa, UBSI",
     date: "N/A",
     category: "Language",
+    image: "/certificate/toefl.png",
   },
   {
     id: "5",
@@ -94,27 +98,31 @@ const certificates: Certificate[] = [
     issuer: "PT Wavetek Integra Nusa",
     date: "N/A",
     category: "Experience",
+    image: "/certificate/magang.jpg",
   },
   {
     id: "6",
     title: "Software Development Bootcamp",
-    issuer: "N/A",
+    issuer: "Universitas Bina Sarana Informatika",
     date: "N/A",
     category: "Training",
+    image: "/certificate/software-bootcamp.png",
   },
   {
     id: "7",
     title: "Machine Learning Bootcamp",
-    issuer: "N/A",
+    issuer: "DQlab",
     date: "N/A",
     category: "Training",
+    image: "/certificate/ml-bootcamp.png",
   },
   {
     id: "8",
     title: "Data Analyst Bootcamp",
-    issuer: "N/A",
+    issuer: "DQlab",
     date: "N/A",
     category: "Training",
+    image: "/certificate/bootcamp-analyst.png",
   },
   {
     id: "9",
@@ -122,34 +130,39 @@ const certificates: Certificate[] = [
     issuer: "Dicoding",
     date: "N/A",
     category: "Technical",
+    image: "/certificate/frontend.jpg",
   },
   {
     id: "10",
     title: "Flutter Coding Camp",
-    issuer: "N/A",
+    issuer: "Harisenin",
     date: "N/A",
     category: "Technical",
+    image: "/certificate/flutter.jpg",
   },
   {
     id: "11",
-    title: "Data Analysis with Excel",
-    issuer: "N/A",
+    title: "Dicoding Academy Study With Python",
+    issuer: "Dicoding",
     date: "N/A",
     category: "Technical",
+    image: "/certificate/python-dicoding.png",
   },
   {
     id: "12",
     title: "Data Analysis with SQL & Python",
-    issuer: "N/A",
+    issuer: "DQlab",
     date: "N/A",
     category: "Technical",
+    image: "/certificate/analyst-sql-pyhton.png",
   },
   {
     id: "13",
-    title: "Belajar Basic AI",
+    title: "Dicoding Academy Study Machine Learning",
     issuer: "Dicoding",
     date: "N/A",
     category: "Technical",
+    image: "/certificate/ml-dicoding.png",
   },
 ];
 
