@@ -362,11 +362,13 @@ export const Experience = () => {
             #020210;
           padding: 100px 0;
           font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+          overflow-x: hidden;
         }
         .rfm-exp-inner {
           max-width: 1300px;
           margin: 0 auto;
           padding: 0 clamp(20px, 4vw, 52px);
+          overflow-x: hidden;
         }
         .rfm-exp-header { text-align: center; margin-bottom: 56px; }
         .rfm-section-label {
@@ -534,8 +536,11 @@ export const Experience = () => {
         .rfm-carousel-wrap {
           position: relative;
           width: 100%;
+          max-width: 100vw;
           overflow: hidden;
           padding: 40px 0;
+          touch-action: pan-y;
+          overscroll-behavior-x: none;
         }
 
         .rfm-carousel-track {
@@ -673,6 +678,13 @@ export const Experience = () => {
           .rfm-proj-thumb { width: 120px !important; min-width: 120px !important; font-size: 32px !important; }
           .rfm-proj-title { font-size: 12px !important; }
           .rfm-proj-desc { font-size: 11px !important; }
+          .rfm-carousel-track { min-width: 100%; }
+          .rfm-carousel-wrap {
+            box-sizing: border-box;
+            max-width: 100vw;
+            margin: 0 auto;
+            padding: 40px 0;
+          }
         }
         /* Modal */
         .rfm-modal-overlay {
