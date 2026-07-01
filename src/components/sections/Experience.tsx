@@ -156,6 +156,22 @@ const projects: Project[] = [
     ],
     github: "#",
   },
+  {
+    id: "7",
+    title: "Go Montir Web App",
+    category: ["Web", "Full-Stack"],
+    year: "2026",
+    description:
+      "An on demand vehicle repair and maintenance service platform connecting vehicle owners with professional mechanics.",
+    highlights: [
+      "Real time mechanic tracking",
+      "Interactive service catalog with transparent pricing and scheduling",
+      "User and mechanic authentication with role-based dashboards",
+      "Chat Bot AI for customer support, service and diagnostic problem your vehicle",
+    ],
+    tech: ["React", "Node.js", "Express", "Supabase", "Socket.io", "PostGIS"],
+    github: "https://go-montir-frontend.rizalfikrim13.workers.dev/auth/login",
+  },
 ];
 
 type ViewType = "experience" | "projects";
@@ -206,11 +222,133 @@ export const Experience = () => {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const timelineRef = useRef<HTMLDivElement>(null);
   const lineProgress = useTimelineScroll(timelineRef);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const isDraggingRef = useRef(false);
+  const maybeDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const deltaRef = useRef(0);
+  const initialOffsetRef = useRef(0);
+  const pointerIdRef = useRef<number | null>(null);
+  const [modalProject, setModalProject] = useState<Project | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   const filteredProjects =
     projectFilter === "All"
       ? projects
       : projects.filter((p) => p.category.some((cat) => cat === projectFilter));
+
+  // --- Carousel helpers (swipe / drag) ---
+  const getCardStep = () => {
+    const tr = trackRef.current;
+    if (!tr) return 620;
+    const card = tr.querySelector(".rfm-proj-card") as HTMLElement | null;
+    if (!card) return 620;
+    return Math.round(card.getBoundingClientRect().width) + 20; // card width + gap
+  };
+
+  const computeOffset = (index: number) => {
+    const step = getCardStep();
+    const center = typeof window !== "undefined" ? window.innerWidth / 2 : 400;
+    return -(index * step) + center - step / 2;
+  };
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    // don't start dragging immediately — wait for a small move so clicks still work
+    maybeDraggingRef.current = true;
+    startXRef.current = e.clientX;
+    deltaRef.current = 0;
+  };
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    const delta = e.clientX - startXRef.current;
+    // if we haven't committed to drag yet, check threshold
+    if (!isDraggingRef.current && maybeDraggingRef.current) {
+      const THRESH = 6; // px
+      if (Math.abs(delta) > THRESH) {
+        // begin dragging
+        isDraggingRef.current = true;
+        maybeDraggingRef.current = false;
+        initialOffsetRef.current = computeOffset(carouselIndex);
+        const tr = trackRef.current;
+        if (tr) {
+          tr.style.transition = 'none';
+          tr.style.cursor = 'grabbing';
+          try { (e.currentTarget as Element).setPointerCapture(e.pointerId); pointerIdRef.current = e.pointerId; } catch {}
+          tr.style.willChange = 'transform';
+        }
+      } else {
+        return; // not moved enough to start dragging
+      }
+    }
+
+    if (!isDraggingRef.current) return;
+    deltaRef.current = delta;
+    const tr = trackRef.current;
+    if (tr) tr.style.transform = `translateX(${initialOffsetRef.current + delta}px)`;
+  };
+
+  const endDrag = () => {
+    // if we never started dragging, treat as click (do nothing here)
+    if (!isDraggingRef.current) {
+      maybeDraggingRef.current = false;
+      deltaRef.current = 0;
+      return;
+    }
+    isDraggingRef.current = false;
+    maybeDraggingRef.current = false;
+    const tr = trackRef.current;
+    if (tr) tr.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    const delta = deltaRef.current;
+    const step = getCardStep();
+    const threshold = step * 0.25;
+    if (Math.abs(delta) > threshold) {
+      if (delta < 0) setCarouselIndex((s) => Math.min(filteredProjects.length - 1, s + 1));
+      else setCarouselIndex((s) => Math.max(0, s - 1));
+    } else {
+      setCarouselIndex((s) => s);
+    }
+    deltaRef.current = 0;
+    if (tr) {
+      try {
+        if (pointerIdRef.current != null && (tr as any).releasePointerCapture) {
+          (tr as any).releasePointerCapture(pointerIdRef.current);
+        }
+      } catch {}
+      pointerIdRef.current = null;
+      tr.style.cursor = '';
+      tr.style.willChange = '';
+    }
+  };
+
+  useEffect(() => {
+    const onUp = () => endDrag();
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
+    return () => {
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+    };
+  }, [filteredProjects.length, carouselIndex]);
+
+  useEffect(() => {
+    if (modalProject) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      const onKey = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') setModalProject(null);
+      };
+      window.addEventListener('keydown', onKey);
+      return () => {
+        document.body.style.overflow = prev;
+        window.removeEventListener('keydown', onKey);
+      };
+    }
+  }, [modalProject]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <>
@@ -405,6 +543,8 @@ export const Experience = () => {
           transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
           align-items: center;
           gap: 20px;
+          touch-action: pan-y;
+          cursor: grab;
         }
 
         .rfm-proj-card {
@@ -479,23 +619,9 @@ export const Experience = () => {
         .rfm-proj-link:hover { color: #00d4ff; }
 
         /* ── Nav: TERPISAH dari carousel-wrap ── */
-        .rfm-carousel-nav {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          justify-content: space-between;
-          width: 100%;
-          margin-top: 20px;
-          padding: 0 8px;
-          box-sizing: border-box;
-        }
+        
 
-        .rfm-carousel-nav-center {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 8px;
-        }
+        
 
         .rfm-carousel-dots {
           display: flex; gap: 8px; align-items: center; justify-content: center;
@@ -548,6 +674,29 @@ export const Experience = () => {
           .rfm-proj-title { font-size: 12px !important; }
           .rfm-proj-desc { font-size: 11px !important; }
         }
+        /* Modal */
+        .rfm-modal-overlay {
+          position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex;
+          align-items: center; justify-content: center; z-index: 2000;
+          padding: 24px;
+        }
+        .rfm-modal {
+          width: 100%; max-width: 820px; background: rgba(2,2,16,0.97);
+          border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 22px;
+          box-shadow: 0 24px 60px rgba(2,2,16,0.6); color: #dde8f8;
+        }
+        .rfm-modal-close {
+          position: absolute; right: 18px; top: 18px; width: 40px; height: 40px;
+          border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0,212,255,0.06);
+          display: flex; align-items: center; justify-content: center; cursor: pointer; color: #00d4ff;
+        }
+        .rfm-modal-header { display:flex; gap:12px; align-items:flex-start; margin-bottom:12px }
+        .rfm-modal-title { font-family: 'Orbitron', monospace; font-size:18px; font-weight:700; margin:0 }
+        .rfm-modal-meta { color: rgba(255,255,255,0.34); font-size:13px }
+        .rfm-modal-body { display:flex; gap:18px; flex-direction:column }
+        .rfm-modal-highlights { list-style: none; padding:0; margin:0; display:flex; flex-direction:column; gap:6px }
+        .rfm-modal-tech { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px }
+        .rfm-modal-tech .rfm-tech-chip { background: rgba(255,255,255,0.03); }
       `}</style>
 
       <section id="experience" className="rfm-exp">
@@ -579,6 +728,46 @@ export const Experience = () => {
               ))}
             </div>
           </div>
+                  {mounted && modalProject && (
+                    <div className="rfm-modal-overlay" onClick={() => setModalProject(null)}>
+                      <div className="rfm-modal" onClick={(e) => e.stopPropagation()}>
+                        <button className="rfm-modal-close" onClick={() => setModalProject(null)}>✕</button>
+                        <div className="rfm-modal-header">
+                          <div style={{flex:1}}>
+                            <h3 className="rfm-modal-title">{modalProject.title}</h3>
+                            <div className="rfm-modal-meta">{modalProject.category.join(' • ')} • {modalProject.year}</div>
+                          </div>
+                        </div>
+                        <div className="rfm-modal-body">
+                          <p style={{color:'rgba(255,255,255,0.6)'}}>{modalProject.description}</p>
+                          <div>
+                            <strong style={{color:'#00d4ff'}}>Highlights</strong>
+                            <ul className="rfm-modal-highlights">
+                              {modalProject.highlights.map((h) => (
+                                <li key={h} style={{color:'rgba(255,255,255,0.6)'}}>• {h}</li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div>
+                            <strong style={{color:'#00d4ff'}}>Technologies</strong>
+                            <div className="rfm-modal-tech">
+                              {modalProject.tech.map((t) => (
+                                <span key={t} className="rfm-tech-chip">{t}</span>
+                              ))}
+                            </div>
+                          </div>
+                          <div style={{display:'flex', gap:12, marginTop:12}}>
+                            {modalProject.github && (
+                              <a href={modalProject.github} target="_blank" rel="noopener noreferrer" className="rfm-proj-link">{t.experience.projects.btnCode}</a>
+                            )}
+                            {modalProject.live && (
+                              <a href={modalProject.live} target="_blank" rel="noopener noreferrer" className="rfm-proj-link">{t.experience.projects.btnLive}</a>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
           {/* Experience Timeline */}
           {activeView === "experience" && (
@@ -623,20 +812,19 @@ export const Experience = () => {
 
               {(() => {
                 const total = filteredProjects.length;
-                const offset =
-                  -(carouselIndex * 620) +
-                  (typeof window !== "undefined"
-                    ? window.innerWidth / 2
-                    : 400) -
-                  310;
 
                 return (
                   <>
                     {/* ✅ Carousel wrap: HANYA berisi track, punya overflow:hidden */}
-                    <div className="rfm-carousel-wrap">
+                    <div className="rfm-carousel-wrap" ref={wrapRef}>
                       <div
+                        ref={trackRef}
                         className="rfm-carousel-track"
-                        style={{ transform: `translateX(${offset}px)` }}
+                        onPointerDown={onPointerDown}
+                        onPointerMove={onPointerMove}
+                        onPointerUp={() => endDrag()}
+                        onPointerCancel={() => endDrag()}
+                        style={mounted ? { transform: `translateX(${computeOffset(carouselIndex)}px)` } : undefined}
                       >
                         {filteredProjects.map((proj, i) => {
                           const diff = i - carouselIndex;
@@ -650,9 +838,7 @@ export const Experience = () => {
                             <div
                               key={proj.id}
                               className={`rfm-proj-card ${cls}`}
-                              onClick={() =>
-                                cls === "adjacent" && setCarouselIndex(i)
-                              }
+                              onClick={() => setModalProject(proj)}
                             >
                               <div className="rfm-proj-thumb">💻</div>
                               <div className="rfm-proj-body">
@@ -736,39 +922,6 @@ export const Experience = () => {
                       </div>
                     </div>
                     {/* ✅ Nav: DI LUAR carousel-wrap, tidak kena overflow:hidden */}
-                    <div className="rfm-carousel-nav">
-                      <button
-                        className="rfm-carousel-btn"
-                        onClick={() => setCarouselIndex((i) => i - 1)}
-                        disabled={carouselIndex === 0}
-                      >
-                        ←
-                      </button>
-
-                      <div className="rfm-carousel-nav-center">
-                        <div className="rfm-carousel-dots">
-                          {filteredProjects.map((_, i) => (
-                            <button
-                              key={i}
-                              className={`rfm-carousel-dot ${i === carouselIndex ? "dot-on" : ""}`}
-                              onClick={() => setCarouselIndex(i)}
-                            />
-                          ))}
-                        </div>
-                        <span className="rfm-carousel-counter">
-                          {String(carouselIndex + 1).padStart(2, "0")} /{" "}
-                          {String(total).padStart(2, "0")}
-                        </span>
-                      </div>
-
-                      <button
-                        className="rfm-carousel-btn"
-                        onClick={() => setCarouselIndex((i) => i + 1)}
-                        disabled={carouselIndex === total - 1}
-                      >
-                        →
-                      </button>
-                    </div>
                   </>
                 );
               })()}
